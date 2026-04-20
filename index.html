@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProGear Sports | Premium Sports Equipment</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <span class="logo-icon">⚡</span>
+            <span class="logo-text">ProGear</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#categories">Categories</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+        <div class="nav-actions">
+            <!-- Login Button (shown when logged out) -->
+            <a href="auth.html" class="btn-primary login-btn" id="login-btn-nav">
+                <span>🔐</span> Login
+            </a>
+
+            <!-- User Menu (shown when logged in) -->
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <button class="user-menu-btn" id="user-menu-btn">
+                    <span class="user-avatar" id="user-avatar">👤</span>
+                    <span class="user-name" id="user-name">User</span>
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="user-dropdown" id="user-dropdown">
+                    <a href="#" class="dropdown-item" id="view-profile">
+                        <span>👤</span> My Profile
+                    </a>
+                    <a href="#" class="dropdown-item" id="my-orders">
+                        <span>📦</span> My Orders
+                    </a>
+                    <a href="#" class="dropdown-item" id="wishlist">
+                        <span>❤️</span> Wishlist
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item logout-btn" id="logout-btn">
+                        <span>🚪</span> Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Theme Toggle Button -->
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode">
+                <span class="theme-icon">🌙</span>
+            </button>
+
+            <button class="btn-primary cart-toggle">
+                <span class="cart-icon">🛒</span>
+                <span>Cart</span>
+                <span class="cart-count">0</span>
+            </button>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- User Profile Modal -->
+    <div class="profile-modal" id="profile-modal">
+        <div class="profile-modal-content">
+            <button class="profile-modal-close" id="profile-modal-close">×</button>
+            <div class="profile-header">
+                <div class="profile-avatar" id="profile-avatar">👤</div>
+                <div class="profile-info">
+                    <h2 id="profile-name">User Name</h2>
+                    <p id="profile-email">user@email.com</p>
+                    <span class="profile-badge">Member since 2026</span>
+                </div>
+            </div>
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <span class="stat-value" id="profile-orders">0</span>
+                    <span class="stat-label">Orders</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="stat-value" id="profile-wishlist">0</span>
+                    <span class="stat-label">Wishlist</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="stat-value" id="profile-total-spent">$0</span>
+                    <span class="stat-label">Total Spent</span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button class="profile-action-btn" id="profile-edit-btn">
+                    <span>✏️</span> Edit Profile
+                </button>
+                <button class="profile-action-btn" id="profile-orders-btn">
+                    <span>📦</span> View Orders
+                </button>
+                <button class="profile-action-btn" id="profile-wishlist-btn">
+                    <span>❤️</span> My Wishlist
+                </button>
+            </div>
+            <div class="profile-divider"></div>
+            <button class="profile-logout-btn" id="profile-logout-btn">
+                <span>🚪</span> Sign Out
+            </button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg-animation">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-orb hero-orb-3"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">🔥 New Collection 2026</div>
+            <h1>Gear Up for<br><span>Greatness</span></h1>
+            <p>Premium sports equipment designed for athletes who refuse to settle for anything less than the best.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" data-target="500">0</span>+
+                    <span class="stat-label">Products</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="10000">0</span>+
+                    <span class="stat-label">Happy Athletes</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="50">0</span>+
+                    <span class="stat-label">Sports</span>
+                </div>
+            </div>
+            <div class="hero-btns">
+                <a href="#products" class="btn-primary">Shop Collection</a>
+                <a href="#categories" class="btn-secondary">Browse Categories</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="floating-sport-item sport-1">🏀</div>
+            <div class="floating-sport-item sport-2">⚽</div>
+            <div class="floating-sport-item sport-3">🎾</div>
+            <div class="floating-sport-item sport-4">👟</div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories" id="categories">
+        <h2 class="section-title">Shop by <span>Sport</span></h2>
+        <div class="category-grid">
+            <div class="category-card" data-category="Basketball">
+                <div class="category-bg">
+                    <div class="category-particles">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="category-icon">🏀</div>
+                <h3>Basketball</h3>
+                <div class="category-overlay"></div>
+            </div>
+            <div class="category-card" data-category="Soccer">
+                <div class="category-bg">
+                    <div class="category-particles">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="category-icon">⚽</div>
+                <h3>Soccer</h3>
+                <div class="category-overlay"></div>
+            </div>
+            <div class="category-card" data-category="Tennis">
+                <div class="category-bg">
+                    <div class="category-particles">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="category-icon">🎾</div>
+                <h3>Tennis</h3>
+                <div class="category-overlay"></div>
+            </div>
+            <div class="category-card" data-category="Running">
+                <div class="category-bg">
+                    <div class="category-particles">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="category-icon">👟</div>
+                <h3>Running</h3>
+                <div class="category-overlay"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products" id="products">
+        <h2 class="section-title">Featured <span>Products</span></h2>
+        <div class="product-grid" id="product-grid">
+            <!-- Products loaded via JS -->
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="about">
+        <div class="features-bg">
+            <div class="feature-line"></div>
+            <div class="feature-line"></div>
+            <div class="feature-line"></div>
+        </div>
+        <h2 class="section-title">Why Choose <span>ProGear</span></h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">🏆</div>
+                    <div class="feature-icon-ring"></div>
+                </div>
+                <h4>Pro Quality</h4>
+                <p>Equipment trusted by professional athletes worldwide</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">🚚</div>
+                    <div class="feature-icon-ring"></div>
+                </div>
+                <h4>Free Shipping</h4>
+                <p>Free delivery on all orders over $100</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-icon-ring"></div>
+                </div>
+                <h4>Easy Returns</h4>
+                <p>30-day hassle-free return policy</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-icon-ring"></div>
+                </div>
+                <h4>Expert Support</h4>
+                <p>Our team of athletes is here to help 24/7</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <h2 class="section-title">What Athletes <span>Say</span></h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-quote">"</div>
+                <div class="stars">★★★★★</div>
+                <p>"ProGear has completely transformed my training. The quality is unmatched and delivery is always on time."</p>
+                <div class="author">
+                    <div class="author-avatar">🏀</div>
+                    <div class="author-info">
+                        <span class="author-name">Marcus Chen</span>
+                        <span class="author-title">Basketball Coach</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-quote">"</div>
+                <div class="stars">★★★★★</div>
+                <p>"I've tried dozens of brands but nothing comes close to ProGear. My players are performing better than ever."</p>
+                <div class="author">
+                    <div class="author-avatar">⚽</div>
+                    <div class="author-info">
+                        <span class="author-name">Sarah Martinez</span>
+                        <span class="author-title">Soccer Team Manager</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="newsletter-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <h2>Stay in the Game</h2>
+        <p>Get exclusive deals, new product alerts, and training tips delivered to your inbox.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email address" required>
+            <button type="submit">Subscribe</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">ProGear</span>
+                </div>
+                <p style="color: #aaa;">Premium sports equipment for athletes who demand excellence.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link">📸</a>
+                    <a href="#" class="social-link">🐦</a>
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">📺</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#">Basketball</a></li>
+                    <li><a href="#">Soccer</a></li>
+                    <li><a href="#">Tennis</a></li>
+                    <li><a href="#">Running</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 ProGear Sports. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <aside class="cart-sidebar">
+        <div class="cart-header">
+            <h3>🛒 Shopping Cart</h3>
+            <button class="cart-close">×</button>
+        </div>
+        <div class="cart-items">
+            <!-- Cart items loaded via JS -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="cart-total-amount">$0.00</span>
+            </div>
+            <button class="btn-primary checkout-btn" style="width: 100%;">Checkout Now</button>
+        </div>
+    </aside>
+
+    <!-- Modal Overlay for Cart -->
+    <div class="modal-overlay"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
