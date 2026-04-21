@@ -7,14 +7,29 @@
 // --------------------------------------------
 const ProductDB = {
     products: [
-        { id: 1, name: 'Pro Championship Basketball', price: 89.99, icon: '🏀', category: 'Basketball' },
-        { id: 2, name: 'Match-Grade Soccer Ball', price: 74.99, icon: '⚽', category: 'Soccer' },
-        { id: 3, name: 'Carbon Fiber Tennis Racket', price: 199.99, icon: '🎾', category: 'Tennis' },
-        { id: 4, name: 'Elite Running Shoes', price: 159.99, icon: '👟', category: 'Running' },
-        { id: 5, name: 'Pro Tennis Balls (3-Pack)', price: 29.99, icon: '🎾', category: 'Tennis' },
-        { id: 6, name: 'Basketball Hoop System', price: 349.99, icon: '🏀', category: 'Basketball' },
-        { id: 7, name: 'Training Cones Set', price: 34.99, icon: '🚧', category: 'Soccer' },
-        { id: 8, name: 'Compression Shorts', price: 44.99, icon: '🩳', category: 'Running' }
+        // Basketball
+        { id: 1, name: 'Wilson NBA Official Game Ball', price: 189.99, image: 'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=400&h=400&fit=crop', category: 'Basketball', badge: 'sale', originalPrice: 229.99 },
+        { id: 2, name: 'Spalding NBA Portable Hoop System', price: 449.99, image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=400&fit=crop', category: 'Basketball', badge: 'new' },
+        { id: 3, name: 'Nike Air Jordan Jumpman Jersey', price: 129.99, image: 'https://images.unsplash.com/photo-1549813069-f5c6c6d09f5b?w=400&h=400&fit=crop', category: 'Basketball', badge: 'bestseller' },
+        { id: 4, name: 'Under Armour Curry Basketball Shoes', price: 159.99, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop', category: 'Basketball', badge: 'new' },
+
+        // Soccer
+        { id: 5, name: 'Adidas FIFA World Cup Match Ball', price: 159.99, image: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=400&h=400&fit=crop', category: 'Soccer', badge: 'sale', originalPrice: 189.99 },
+        { id: 6, name: 'Nike Mercurial Superfly Cleats', price: 249.99, image: 'https://images.unsplash.com/photo-1511886929837-354d827aae26?w=400&h=400&fit=crop', category: 'Soccer', badge: 'bestseller' },
+        { id: 7, name: 'Adidas Predator Goalkeeper Gloves', price: 79.99, image: 'https://images.unsplash.com/photo-1579952363874-27f5b0f839b5?w=400&h=400&fit=crop', category: 'Soccer', badge: 'new' },
+        { id: 8, name: 'KipstaTraining Cones Set (20pc)', price: 34.99, image: 'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=400&h=400&fit=crop', category: 'Soccer' },
+
+        // Tennis
+        { id: 9, name: 'Wilson Pro Staff RF97 Racket', price: 269.99, image: 'https://images.unsplash.com/photo-1617083934555-ac8d96cba83d?w=400&h=400&fit=crop', category: 'Tennis', badge: 'bestseller' },
+        { id: 10, name: 'Babolat Pure Aero Tennis Racket', price: 229.99, image: 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=400&h=400&fit=crop', category: 'Tennis', badge: 'new' },
+        { id: 11, name: 'Wilson Grand Slam Tennis Balls (12pk)', price: 59.99, image: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=400&fit=crop', category: 'Tennis', badge: 'sale', originalPrice: 74.99 },
+        { id: 12, name: 'Nike Court Vapor Tennis Shoes', price: 139.99, image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=400&fit=crop', category: 'Tennis' },
+
+        // Running
+        { id: 13, name: 'Nike Air Zoom Pegasus 40', price: 179.99, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop', category: 'Running', badge: 'bestseller' },
+        { id: 14, name: 'Adidas Ultraboost Light Runners', price: 219.99, image: 'https://images.unsplash.com/photo-1556906781-9a412961c28c?w=400&h=400&fit=crop', category: 'Running', badge: 'new' },
+        { id: 15, name: 'Under Armour HeatGear Compression', price: 44.99, image: 'https://images.unsplash.com/photo-1515610142599-9d6c1254a3bf?w=400&h=400&fit=crop', category: 'Running', badge: 'sale', originalPrice: 59.99 },
+        { id: 16, name: 'Garmin Forerunner 265 GPS Watch', price: 449.99, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop', category: 'Running', badge: 'bestseller' }
     ],
 
     getAll() {
@@ -136,13 +151,22 @@ const UIController = {
 
         this.elements.productGrid.innerHTML = products.map((product, index) => `
             <div class="product-card animate-on-scroll" style="--delay: ${index * 0.1}s">
-                <div class="product-img">${product.icon}</div>
-                <h4>${product.name}</h4>
-                <div class="price">$${product.price.toFixed(2)}</div>
-                <button class="btn-primary add-to-cart" data-id="${product.id}">
-                    <span class="btn-text">Add to Cart</span>
-                    <span class="btn-icon">🛒</span>
-                </button>
+                <div class="product-img">
+                    <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    ${product.badge ? `<span class="product-badge ${product.badge}">${product.badge === 'new' ? 'New' : product.badge === 'sale' ? 'Sale' : 'Best Seller'}</span>` : ''}
+                </div>
+                <div class="product-info">
+                    <span class="product-category">${product.category}</span>
+                    <h4>${product.name}</h4>
+                    <div class="product-price">
+                        <span class="price-current">$${product.price.toFixed(2)}</span>
+                        ${product.originalPrice ? `<span class="price-original">$${product.originalPrice.toFixed(2)}</span>` : ''}
+                    </div>
+                    <button class="add-to-cart" data-id="${product.id}">
+                        <span>Add to Cart</span>
+                        <span>🛒</span>
+                    </button>
+                </div>
             </div>
         `).join('');
 
@@ -175,19 +199,17 @@ const UIController = {
 
         this.elements.cartItems.innerHTML = items.map(item => `
             <div class="cart-item" data-id="${item.id}">
-                <div class="cart-item-img">${item.icon}</div>
+                <div class="cart-item-img"><img src="${item.image}" alt="${item.name}"></div>
                 <div class="cart-item-info">
                     <h4>${item.name}</h4>
-                    <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
                     <div class="cart-item-qty">
                         <button class="qty-btn qty-minus" data-id="${item.id}">−</button>
                         <span class="qty-value">${item.quantity}</span>
                         <button class="qty-btn qty-plus" data-id="${item.id}">+</button>
                     </div>
                 </div>
-                <div class="cart-item-actions">
-                    <button class="cart-item-remove" data-id="${item.id}">×</button>
-                </div>
+                <button class="cart-item-remove" data-id="${item.id}">×</button>
             </div>
         `).join('');
 
