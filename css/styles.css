@@ -633,8 +633,21 @@ nav {
     transition: transform 0.6s var(--ease-out-expo);
 }
 
+.product-img img[src=""],
+.product-img img:not([src]) {
+    opacity: 0;
+}
+
+.product-img img:not([src]) + .product-badge {
+    display: none;
+}
+
 .product-card:hover .product-img img {
     transform: scale(1.08);
+}
+
+.product-card:hover .product-img img:not([src]) {
+    transform: none;
 }
 
 /* Product Badge */
