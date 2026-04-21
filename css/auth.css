@@ -848,7 +848,100 @@ body.dark-theme .error-message {
     color: #ff6b6b;
 }
 
+/* Dark theme OTP */
+body.dark-theme .otp-digit {
+    background: #222;
+    border-color: #333;
+    color: white;
+}
+
+body.dark-theme .otp-digit:focus {
+    border-color: var(--primary);
+    background: #1a1a1a;
+    box-shadow: 0 0 0 4px rgba(255, 77, 0, 0.15);
+}
+
+body.dark-theme .otp-timer {
+    color: #888;
+}
+
+body.dark-theme .btn-text-link:disabled {
+    color: #666;
+}
+
 /* Logo text stays gradient, no changes needed */
+
+/* Button text link */
+.btn-text-link {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color var(--transition-fast);
+}
+
+.btn-text-link:hover {
+    color: var(--primary-dark);
+}
+
+.btn-text-link:disabled {
+    color: var(--gray);
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/* --------------------------------------------
+   OTP INPUTS
+   -------------------------------------------- */
+.otp-inputs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.otp-digit {
+    width: 45px;
+    height: 55px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: #fafafa;
+    color: var(--dark);
+    transition: all var(--transition-fast);
+}
+
+.otp-digit:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(255, 77, 0, 0.1);
+}
+
+.otp-timer {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--gray);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Hidden utility */
+.hidden {
+    display: none !important;
+}
+
+/* Phone button icon */
+.btn-social.phone svg {
+    color: var(--primary);
+}
 
 /* --------------------------------------------
    RESPONSIVE
@@ -870,5 +963,15 @@ body.dark-theme .error-message {
     .toast {
         min-width: auto;
         width: 100%;
+    }
+
+    .otp-digit {
+        width: 38px;
+        height: 48px;
+        font-size: 1.25rem;
+    }
+
+    .otp-inputs {
+        gap: 0.35rem;
     }
 }

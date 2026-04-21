@@ -3,6 +3,48 @@
 // ============================================
 
 // --------------------------------------------
+// FIREBASE CONFIGURATION
+// --------------------------------------------
+// Replace with your Firebase config
+const firebaseConfig = {
+    apiKey: "AIzaSyAQpnSVOSPLRJfG99PtFwBEZoGW1HfG9m4",
+    authDomain: "progear-jit1.firebaseapp.com",
+    projectId: "progear-jit1",
+    storageBucket: "progear-jit1.firebasestorage.app",
+    messagingSenderId: "711309433406",
+    appId: "1:711309433406:web:cace0b98f0353d3ae20f6f",
+    measurementId: "G-HF8K7PQK2D"
+};
+
+// Initialize Firebase
+let firebaseInitialized = false;
+let firebaseAuth = null;
+let confirmationResult = null;
+let recaptchaVerifier = null;
+
+function initFirebase() {
+    if (firebaseInitialized) return true;
+
+    try {
+        if (typeof firebase === 'undefined') {
+            console.warn('Firebase SDK not loaded. Using demo mode.');
+            return false;
+        }
+
+        firebase.initializeApp(firebaseConfig);
+        firebaseAuth = firebase.auth();
+        firebaseInitialized = true;
+        return true;
+    } catch (error) {
+        console.warn('Firebase initialization failed:', error.message);
+        return false;
+    }
+}
+
+// Initialize Firebase on load
+initFirebase();
+
+// --------------------------------------------
 // THEME MANAGER (Shared)
 // --------------------------------------------
 const ThemeManager = {
@@ -48,7 +90,7 @@ ThemeManager.init();
 
 // --------------------------------------------
 // DEMO MODE AUTHENTICATION
-// For immediate testing without Firebase setup
+// Falls back to this if Firebase is not configured
 // --------------------------------------------
 const DemoAuth = {
     users: [
@@ -111,9 +153,11 @@ DemoAuth.init();
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
 const forgotForm = document.getElementById('forgot-form');
+const phoneForm = document.getElementById('phone-form');
 const loginBtn = document.getElementById('login-btn');
 const signupBtn = document.getElementById('signup-btn');
 const forgotBtn = document.getElementById('forgot-btn');
+const phoneBtn = document.getElementById('phone-btn');
 
 // --------------------------------------------
 // HELPER FUNCTIONS
@@ -173,6 +217,7 @@ function closeModal() {
 // --------------------------------------------
 function showLogin() {
     clearErrors();
+    document.getElementById('phone-card').classList.remove('active');
     document.getElementById('signup-card').classList.remove('active');
     document.getElementById('forgot-card').classList.remove('active');
     document.querySelector('.auth-card').classList.add('active');
@@ -181,6 +226,7 @@ function showLogin() {
 function showSignUp() {
     clearErrors();
     document.querySelector('.auth-card').classList.remove('active');
+    document.getElementById('phone-card').classList.remove('active');
     document.getElementById('forgot-card').classList.remove('active');
     document.getElementById('signup-card').classList.add('active');
 }
@@ -188,14 +234,34 @@ function showSignUp() {
 function showForgotPassword() {
     clearErrors();
     document.querySelector('.auth-card').classList.remove('active');
+    document.getElementById('phone-card').classList.remove('active');
     document.getElementById('signup-card').classList.remove('active');
     document.getElementById('forgot-card').classList.add('active');
+}
+
+function showPhoneLogin() {
+    clearErrors();
+    document.querySelector('.auth-card').classList.remove('active');
+    document.getElementById('signup-card').classList.remove('active');
+    document.getElementById('forgot-card').classList.remove('active');
+    document.getElementById('phone-card').classList.add('active');
+
+    // Reset phone form state
+    document.getElementById('phone-step-1').classList.remove('hidden');
+    document.getElementById('phone-step-2').classList.add('hidden');
+    phoneForm.reset();
+
+    // Initialize reCAPTCHA if Firebase is available
+    if (firebaseInitialized) {
+        initRecaptcha();
+    }
 }
 
 // Make functions global
 window.showLogin = showLogin;
 window.showSignUp = showSignUp;
 window.showForgotPassword = showForgotPassword;
+window.showPhoneLogin = showPhoneLogin;
 window.closeModal = closeModal;
 
 // --------------------------------------------
@@ -211,6 +277,389 @@ document.querySelectorAll('.toggle-password').forEach(btn => {
             input.type = 'password';
             btn.textContent = '👁️';
         }
+    });
+});
+
+// --------------------------------------------
+// GOOGLE AUTHENTICATION
+// --------------------------------------------
+async function signInWithGoogle() {
+    if (!firebaseInitialized) {
+        // Demo mode fallback
+        setButtonLoading(loginBtn, true);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        DemoAuth.currentUser = { email: 'google.user@gmail.com', name: 'Google User', avatar: '🔵' };
+        localStorage.setItem('progear_demo_user', JSON.stringify(DemoAuth.currentUser));
+
+        showToast('Welcome Google User!', 'success');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+        return;
+    }
+
+    setButtonLoading(loginBtn, true);
+
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+
+        const result = await firebaseAuth.signInWithPopup(provider);
+        const user = result.user;
+
+        // Store user data
+        const userData = {
+            email: user.email,
+            name: user.displayName || user.email.split('@')[0],
+            avatar: '🔵',
+            uid: user.uid
+        };
+        localStorage.setItem('progear_demo_user', JSON.stringify(userData));
+
+        showToast(`Welcome ${userData.name}!`, 'success');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+
+    } catch (error) {
+        console.error('Google sign-in error:', error);
+
+        if (error.code === 'auth/popup-closed-by-user') {
+            showToast('Sign-in cancelled', 'info');
+        } else if (error.code === 'auth/network-request-failed') {
+            showToast('Network error. Please check your connection.', 'error');
+        } else {
+            showToast(error.message || 'Google sign-in failed', 'error');
+        }
+    } finally {
+        setButtonLoading(loginBtn, false);
+    }
+}
+
+async function signUpWithGoogle() {
+    if (!firebaseInitialized) {
+        // Demo mode fallback
+        setButtonLoading(signupBtn, true);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        DemoAuth.currentUser = { email: 'google.user@gmail.com', name: 'Google User', avatar: '🔵' };
+        localStorage.setItem('progear_demo_user', JSON.stringify(DemoAuth.currentUser));
+
+        showModal('Welcome!', 'Your account has been created with Google.');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 2000);
+        return;
+    }
+
+    setButtonLoading(signupBtn, true);
+
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+
+        const result = await firebaseAuth.signInWithPopup(provider);
+        const user = result.user;
+
+        // Check if new user or existing
+        const userData = {
+            email: user.email,
+            name: user.displayName || user.email.split('@')[0],
+            avatar: '🔵',
+            uid: user.uid
+        };
+        localStorage.setItem('progear_demo_user', JSON.stringify(userData));
+
+        showModal('Welcome!', 'Your account has been created with Google.');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 2000);
+
+    } catch (error) {
+        console.error('Google sign-up error:', error);
+
+        if (error.code === 'auth/popup-closed-by-user') {
+            showToast('Sign-up cancelled', 'info');
+        } else if (error.code === 'auth/network-request-failed') {
+            showToast('Network error. Please check your connection.', 'error');
+        } else {
+            showToast(error.message || 'Google sign-up failed', 'error');
+        }
+    } finally {
+        setButtonLoading(signupBtn, false);
+    }
+}
+
+// Make Google functions global
+window.signInWithGoogle = signInWithGoogle;
+window.signUpWithGoogle = signUpWithGoogle;
+
+// --------------------------------------------
+// PHONE AUTHENTICATION (OTP)
+// --------------------------------------------
+function initRecaptcha() {
+    if (!firebaseInitialized) return;
+
+    // Clear previous recaptcha if exists
+    const recaptchaContainer = document.getElementById('recaptcha-container');
+    recaptchaContainer.innerHTML = '';
+
+    recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'normal',
+        'callback': () => {
+            // reCAPTCHA solved
+        },
+        'expired-callback': () => {
+            showToast('reCAPTCHA expired. Please try again.', 'warning');
+            initRecaptcha();
+        }
+    });
+
+    recaptchaVerifier.render();
+}
+
+async function sendPhoneOTP() {
+    const phoneNumber = document.getElementById('phone-number').value.trim();
+
+    if (!phoneNumber) {
+        showError('phone-error', 'Phone number is required');
+        return false;
+    }
+
+    // Basic phone validation
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+    if (!phoneRegex.test(phoneNumber.replace(/\s/g, ''))) {
+        showError('phone-error', 'Please enter a valid phone number with country code (e.g., +1234567890)');
+        return false;
+    }
+
+    if (!firebaseInitialized) {
+        // Demo mode - simulate OTP
+        simulatePhoneOTP(phoneNumber);
+        return true;
+    }
+
+    setButtonLoading(phoneBtn, true);
+
+    try {
+        // Ensure recaptcha is initialized
+        if (!recaptchaVerifier) {
+            initRecaptcha();
+        }
+
+        confirmationResult = await firebaseAuth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
+
+        // Show OTP step
+        document.getElementById('phone-step-1').classList.add('hidden');
+        document.getElementById('phone-step-2').classList.remove('hidden');
+        document.getElementById('phone-btn').querySelector('.btn-text').textContent = 'Verify OTP';
+
+        // Start countdown
+        startOTPCountdown();
+
+        showToast('OTP sent to ' + phoneNumber, 'success');
+        return true;
+
+    } catch (error) {
+        console.error('Phone OTP error:', error);
+
+        if (error.code === 'auth/invalid-phone-number') {
+            showError('phone-error', 'Invalid phone number format');
+        } else if (error.code === 'auth/too-many-requests') {
+            showError('phone-error', 'Too many attempts. Please try again later.');
+        } else if (error.code === 'auth/captcha-check-failed') {
+            showError('phone-error', 'reCAPTCHA verification failed. Please try again.');
+            initRecaptcha();
+        } else {
+            showError('phone-error', error.message || 'Failed to send OTP');
+        }
+        return false;
+    } finally {
+        setButtonLoading(phoneBtn, false);
+    }
+}
+
+async function verifyPhoneOTP() {
+    // Get OTP from inputs
+    const otpDigits = [];
+    for (let i = 1; i <= 6; i++) {
+        const digit = document.getElementById(`otp-${i}`).value.trim();
+        if (!digit) {
+            showError('otp-error', 'Please enter all 6 digits');
+            return false;
+        }
+        otpDigits.push(digit);
+    }
+    const otp = otpDigits.join('');
+
+    if (otp.length !== 6) {
+        showError('otp-error', 'Please enter all 6 digits');
+        return false;
+    }
+
+    if (!firebaseInitialized) {
+        // Demo mode - simulate success
+        DemoAuth.currentUser = {
+            email: 'phone.user@progear.com',
+            name: 'Phone User',
+            avatar: '📱'
+        };
+        localStorage.setItem('progear_demo_user', JSON.stringify(DemoAuth.currentUser));
+
+        showToast('Phone verification successful!', 'success');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+        return true;
+    }
+
+    setButtonLoading(phoneBtn, true);
+
+    try {
+        const result = await confirmationResult.confirm(otp);
+        const user = result.user;
+
+        // Store user data
+        const userData = {
+            email: user.phoneNumber || 'phone.user@progear.com',
+            name: user.displayName || 'Phone User',
+            avatar: '📱',
+            uid: user.uid,
+            phone: user.phoneNumber
+        };
+        localStorage.setItem('progear_demo_user', JSON.stringify(userData));
+
+        showToast('Phone verification successful!', 'success');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+        return true;
+
+    } catch (error) {
+        console.error('OTP verification error:', error);
+
+        if (error.code === 'auth/invalid-verification-code') {
+            showError('otp-error', 'Invalid OTP. Please try again.');
+        } else if (error.code === 'auth/code-expired') {
+            showError('otp-error', 'OTP has expired. Please request a new one.');
+        } else {
+            showError('otp-error', error.message || 'Verification failed');
+        }
+        return false;
+    } finally {
+        setButtonLoading(phoneBtn, false);
+    }
+}
+
+// Demo mode phone OTP simulation
+function simulatePhoneOTP(phoneNumber) {
+    document.getElementById('phone-step-1').classList.add('hidden');
+    document.getElementById('phone-step-2').classList.remove('hidden');
+    document.getElementById('phone-btn').querySelector('.btn-text').textContent = 'Verify OTP';
+
+    startOTPCountdown();
+    showToast('Demo: OTP sent to ' + phoneNumber, 'success');
+}
+
+// OTP Timer
+let otpCountdownInterval = null;
+
+function startOTPCountdown() {
+    let seconds = 60;
+    const countdownEl = document.getElementById('otp-countdown');
+    const timerText = document.getElementById('otp-timer-text');
+    const resendBtn = document.getElementById('resend-otp-btn');
+
+    if (otpCountdownInterval) {
+        clearInterval(otpCountdownInterval);
+    }
+
+    resendBtn.disabled = true;
+    timerText.style.display = 'block';
+
+    otpCountdownInterval = setInterval(() => {
+        seconds--;
+        countdownEl.textContent = seconds;
+
+        if (seconds <= 0) {
+            clearInterval(otpCountdownInterval);
+            timerText.style.display = 'none';
+            resendBtn.disabled = false;
+        }
+    }, 1000);
+}
+
+function resendOTP() {
+    if (firebaseInitialized && recaptchaVerifier) {
+        // Reset recaptcha
+        recaptchaVerifier.render();
+    }
+    document.getElementById('phone-step-2').classList.add('hidden');
+    document.getElementById('phone-step-1').classList.remove('hidden');
+    document.getElementById('phone-btn').querySelector('.btn-text').textContent = 'Send OTP';
+
+    // Clear OTP inputs
+    for (let i = 1; i <= 6; i++) {
+        document.getElementById(`otp-${i}`).value = '';
+    }
+}
+
+// Make resendOTP global
+window.resendOTP = resendOTP;
+
+// Phone form submit handler
+phoneForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors();
+
+    const isStep1 = !document.getElementById('phone-step-2').classList.contains('hidden');
+
+    if (isStep1) {
+        await sendPhoneOTP();
+    } else {
+        await verifyPhoneOTP();
+    }
+});
+
+// OTP input auto-focus
+document.querySelectorAll('.otp-digit').forEach((input, index, inputs) => {
+    input.addEventListener('input', (e) => {
+        const value = e.target.value;
+
+        // Only allow digits
+        if (!/^\d*$/.test(value)) {
+            e.target.value = '';
+            return;
+        }
+
+        // Move to next input if value entered
+        if (value && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+    });
+
+    input.addEventListener('keydown', (e) => {
+        // Handle backspace to move to previous input
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
+
+    // Handle paste for OTP
+    input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+
+        pastedData.split('').forEach((char, i) => {
+            if (inputs[i]) {
+                inputs[i].value = char;
+            }
+        });
+
+        // Focus last filled or first empty
+        const lastFilledIndex = Math.min(pastedData.length, inputs.length - 1);
+        inputs[lastFilledIndex].focus();
     });
 });
 
@@ -364,41 +813,6 @@ forgotForm.addEventListener('submit', async (e) => {
         setButtonLoading(forgotBtn, false);
     }
 });
-
-// --------------------------------------------
-// SOCIAL LOGIN HANDLERS (Demo)
-// --------------------------------------------
-async function signInWithGoogle() {
-    // Demo: simulate Google sign-in
-    setButtonLoading(loginBtn, true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    DemoAuth.currentUser = { email: 'google.user@gmail.com', name: 'Google User', avatar: '🔵' };
-    localStorage.setItem('progear_demo_user', JSON.stringify(DemoAuth.currentUser));
-
-    showToast('Welcome Google User!', 'success');
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 1500);
-}
-
-async function signUpWithGoogle() {
-    // Demo: simulate Google sign-up
-    setButtonLoading(signupBtn, true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    DemoAuth.currentUser = { email: 'google.user@gmail.com', name: 'Google User', avatar: '🔵' };
-    localStorage.setItem('progear_demo_user', JSON.stringify(DemoAuth.currentUser));
-
-    showModal('Welcome!', 'Your account has been created with Google.');
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 2000);
-}
-
-// Make global
-window.signInWithGoogle = signInWithGoogle;
-window.signUpWithGoogle = signUpWithGoogle;
 
 // --------------------------------------------
 // CHECK AUTH STATE ON LOAD
