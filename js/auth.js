@@ -307,20 +307,36 @@ async function signInWithGoogle() {
 
         const result = await firebaseAuth.signInWithPopup(provider);
         const user = result.user;
+        const isNewUser = result._tokenResponse?.isNewUser || false;
 
         // Store user data
         const userData = {
             email: user.email,
             name: user.displayName || user.email.split('@')[0],
             avatar: '🔵',
-            uid: user.uid
+            uid: user.uid,
+            provider: 'google'
         };
-        localStorage.setItem('progear_demo_user', JSON.stringify(userData));
 
-        showToast(`Welcome ${userData.name}!`, 'success');
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
+        // Check if returning user by email
+        const existingUserData = localStorage.getItem('progear_demo_user');
+        const existingUser = existingUserData ? JSON.parse(existingUserData) : null;
+
+        if (existingUser && existingUser.email === user.email && existingUser.profileComplete) {
+            // Returning user - go directly to home
+            localStorage.setItem('progear_demo_user', JSON.stringify(userData));
+            showToast(`Welcome back, ${userData.name}!`, 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        } else {
+            // New user - go to profile setup
+            sessionStorage.setItem('progear_pending_user', JSON.stringify(userData));
+            showToast(`Welcome ${userData.name}! Let's set up your profile.`, 'success');
+            setTimeout(() => {
+                window.location.href = 'profile-setup.html';
+            }, 1500);
+        }
 
     } catch (error) {
         console.error('Google sign-in error:', error);
@@ -361,20 +377,32 @@ async function signUpWithGoogle() {
 
         const result = await firebaseAuth.signInWithPopup(provider);
         const user = result.user;
+        const isNewUser = result._tokenResponse?.isNewUser || false;
 
-        // Check if new user or existing
+        // Store user data
         const userData = {
             email: user.email,
             name: user.displayName || user.email.split('@')[0],
             avatar: '🔵',
-            uid: user.uid
+            uid: user.uid,
+            provider: 'google'
         };
-        localStorage.setItem('progear_demo_user', JSON.stringify(userData));
 
-        showModal('Welcome!', 'Your account has been created with Google.');
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 2000);
+        if (isNewUser) {
+            // New user - go to profile setup
+            sessionStorage.setItem('progear_pending_user', JSON.stringify(userData));
+            showModal('Welcome!', 'Your account has been created with Google. Let\'s set up your profile.');
+            setTimeout(() => {
+                window.location.href = 'profile-setup.html';
+            }, 2000);
+        } else {
+            // Existing user just logging in
+            localStorage.setItem('progear_demo_user', JSON.stringify(userData));
+            showModal('Welcome!', 'Welcome back!');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
 
     } catch (error) {
         console.error('Google sign-up error:', error);
@@ -522,18 +550,33 @@ async function verifyPhoneOTP() {
 
         // Store user data
         const userData = {
-            email: user.phoneNumber || 'phone.user@progear.com',
-            name: user.displayName || 'Phone User',
+            email: user.phoneNumber ? `${user.phoneNumber}@progear.temp` : 'phone.user@progear.com',
+            name: 'Phone User',
             avatar: '📱',
             uid: user.uid,
-            phone: user.phoneNumber
+            phone: user.phoneNumber,
+            provider: 'phone'
         };
-        localStorage.setItem('progear_demo_user', JSON.stringify(userData));
 
-        showToast('Phone verification successful!', 'success');
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
+        // Check if returning user
+        const existingUserData = localStorage.getItem('progear_demo_user');
+        const existingUser = existingUserData ? JSON.parse(existingUserData) : null;
+
+        if (existingUser && existingUser.phone === user.phoneNumber && existingUser.profileComplete) {
+            // Returning user - go directly to home
+            localStorage.setItem('progear_demo_user', JSON.stringify(userData));
+            showToast('Phone verification successful!', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        } else {
+            // New user - go to profile setup
+            sessionStorage.setItem('progear_pending_user', JSON.stringify(userData));
+            showToast('Verification successful! Let\'s set up your profile.', 'success');
+            setTimeout(() => {
+                window.location.href = 'profile-setup.html';
+            }, 1500);
+        }
         return true;
 
     } catch (error) {

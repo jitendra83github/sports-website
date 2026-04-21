@@ -393,6 +393,7 @@ const App = {
             if (userMenu) userMenu.style.display = 'block';
             if (loginBtn) loginBtn.style.display = 'none';
             if (userName) userName.textContent = user.name;
+            if (userAvatar) userAvatar.textContent = user.avatar || '👤';
         } else {
             if (userMenu) userMenu.style.display = 'none';
             if (loginBtn) loginBtn.style.display = 'flex';

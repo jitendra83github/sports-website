@@ -869,6 +869,48 @@ body.dark-theme .btn-text-link:disabled {
     color: #666;
 }
 
+/* Profile Setup Dark Theme */
+body.dark-theme .setup-card {
+    background: #1a1a1a;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-theme .setup-header h1 {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+body.dark-theme .setup-header p {
+    color: #888;
+}
+
+body.dark-theme .setup-card select,
+body.dark-theme .setup-card input[type="date"] {
+    background: #222;
+    border-color: #333;
+    color: white;
+}
+
+body.dark-theme .avatar-option {
+    background: #222;
+    border-color: #333;
+}
+
+body.dark-theme .avatar-option:hover {
+    border-color: var(--primary-light);
+}
+
+body.dark-theme .btn-skip {
+    color: #888;
+}
+
+body.dark-theme .btn-skip:hover {
+    color: var(--primary);
+}
+
+body.dark-theme .success-checkmark {
+    background: var(--success);
+}
+
 /* Logo text stays gradient, no changes needed */
 
 /* Button text link */

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Profile | ProGear Sports</title>
+    <link rel="stylesheet" href="css/auth.css">
+    <style>
+        .setup-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .setup-card {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 1;
+            animation: cardSlideIn 0.6s ease;
+        }
+
+        .setup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .setup-header .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #ff8c00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .setup-header h1 {
+            font-size: 1.75rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .setup-header p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .input-row .input-group {
+            flex: 1;
+        }
+
+        .avatar-selector {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .avatar-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        .avatar-option:hover {
+            border-color: var(--primary-light);
+            transform: scale(1.1);
+        }
+
+        .avatar-option.selected {
+            border-color: var(--primary);
+            background: rgba(255, 77, 0, 0.1);
+        }
+
+        .btn-skip {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 1rem;
+        }
+
+        .btn-skip:hover {
+            color: var(--primary);
+        }
+
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            animation: iconBounce 0.6s ease;
+        }
+
+        @keyframes iconBounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            .setup-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .input-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <!-- Animated Background -->
+        <div class="bg-animation">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+            <div class="particles">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+
+        <!-- Profile Setup Card -->
+        <div class="setup-card" id="setup-card">
+            <div class="setup-header">
+                <div class="avatar-preview" id="avatar-preview">👤</div>
+                <h1>Complete Your Profile</h1>
+                <p>Welcome! Let's set up your ProGear account</p>
+            </div>
+
+            <form id="profile-form">
+                <div class="input-group">
+                    <label for="full-name">Full Name</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="full-name" placeholder="Enter your full name" required>
+                    </div>
+                    <span class="error-message" id="name-error"></span>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="phone">Phone (Optional)</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📱</span>
+                            <input type="tel" id="phone" placeholder="+1 234 567 8900">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gender">Gender</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">⚧</span>
+                            <select id="gender" style="width:100%;padding:1rem 1rem 1rem 3.5rem;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;background:#fafafa;">
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not">Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="dob">Date of Birth (Optional)</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📅</span>
+                        <input type="date" id="dob" style="width:100%;padding:1rem 1rem 1rem 3.5rem;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;background:#fafafa;">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Choose Your Avatar</label>
+                    <div class="avatar-selector">
+                        <div class="avatar-option" data-avatar="🏃">🏃</div>
+                        <div class="avatar-option" data-avatar="⚡">⚡</div>
+                        <div class="avatar-option" data-avatar="🏀">🏀</div>
+                        <div class="avatar-option" data-avatar="⚽">⚽</div>
+                        <div class="avatar-option" data-avatar="🎾">🎾</div>
+                        <div class="avatar-option" data-avatar="🏆">🏆</div>
+                        <div class="avatar-option" data-avatar="🎯">🎯</div>
+                        <div class="avatar-option" data-avatar="🔥">🔥</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-auth" id="save-btn">
+                    <span class="btn-text">Complete Profile</span>
+                    <span class="btn-loader"></span>
+                </button>
+
+                <button type="button" class="btn-skip" onclick="skipProfile()">
+                    Skip for now
+                </button>
+            </form>
+        </div>
+
+        <!-- Success State (Hidden by default) -->
+        <div class="setup-card" id="success-card" style="display:none;">
+            <div class="setup-header">
+                <div class="success-checkmark">✓</div>
+                <h1>Profile Complete!</h1>
+                <p>You're all set to start shopping</p>
+            </div>
+            <button class="btn-auth" onclick="goToHome()">
+                <span class="btn-text">Start Shopping</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // Avatar selection
+        document.querySelectorAll('.avatar-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                document.getElementById('avatar-preview').textContent = option.dataset.avatar;
+            });
+        });
+
+        // Pre-fill name if available from auth
+        const tempUser = JSON.parse(sessionStorage.getItem('progear_pending_user') || '{}');
+        if (tempUser.name && tempUser.name !== 'Phone User' && tempUser.name !== 'Google User') {
+            document.getElementById('full-name').value = tempUser.name;
+        }
+        if (tempUser.avatar) {
+            document.getElementById('avatar-preview').textContent = tempUser.avatar;
+            const matchingAvatar = document.querySelector(`[data-avatar="${tempUser.avatar}"]`);
+            if (matchingAvatar) matchingAvatar.classList.add('selected');
+        }
+
+        // Form submission
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btn = document.getElementById('save-btn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            const name = document.getElementById('full-name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const gender = document.getElementById('gender').value;
+            const dob = document.getElementById('dob').value;
+            const avatar = document.querySelector('.avatar-option.selected')?.dataset.avatar || '🏃';
+
+            if (!name) {
+                showToast('Please enter your name', 'error');
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                return;
+            }
+
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // Get existing user data and merge
+            const existingUser = JSON.parse(localStorage.getItem('progear_demo_user') || '{}');
+            const updatedUser = {
+                ...existingUser,
+                name: name,
+                phone: phone || existingUser.phone,
+                gender: gender,
+                dob: dob,
+                avatar: avatar,
+                profileComplete: true
+            };
+
+            localStorage.setItem('progear_demo_user', JSON.stringify(updatedUser));
+            sessionStorage.removeItem('progear_pending_user');
+
+            // Show success state
+            document.getElementById('setup-card').style.display = 'none';
+            document.getElementById('success-card').style.display = 'block';
+        });
+
+        function skipProfile() {
+            const avatar = document.querySelector('.avatar-option.selected')?.dataset.avatar || '🏃';
+            const existingUser = JSON.parse(localStorage.getItem('progear_demo_user') || '{}');
+            const updatedUser = {
+                ...existingUser,
+                avatar: avatar,
+                profileComplete: true
+            };
+            localStorage.setItem('progear_demo_user', JSON.stringify(updatedUser));
+            sessionStorage.removeItem('progear_pending_user');
+            goToHome();
+        }
+
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Toast function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <span class="toast-icon">${type === 'success' ? '✓' : type === 'error' ? '✕' : '!'}</span>
+                <span class="toast-message">${message}</span>
+            `;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('show'));
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
