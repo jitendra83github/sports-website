@@ -5,40 +5,72 @@ Premium sports equipment e-commerce website.
 ## Project Overview
 - **Type**: Static HTML/CSS/JS e-commerce website
 - **Repository**: https://github.com/jitendra83github/sports-website
+- **Live Site**: https://sports-website-3b5b5.web.app (Firebase Hosting)
 - **Main Page**: `index.html` (home page with products, cart, auth)
 - **Auth Page**: `auth.html` (login/signup/forgot password)
 
 ## Tech Stack
 - HTML5, CSS3, JavaScript (vanilla)
-- Firebase Auth (ready for integration)
+- Firebase Auth & Hosting (ready for integration)
 - LocalStorage for cart/theme persistence
 
 ## File Structure
 ```
 ├── index.html          # Main landing page
 ├── auth.html           # Authentication page (login/signup)
+├── firebase.json       # Firebase hosting configuration
 ├── css/
 │   ├── styles.css      # Main stylesheet + dark theme
 │   └── auth.css        # Auth page styles + dark theme
 ├── js/
 │   ├── app.js          # Main app logic, cart, theme manager
 │   └── auth.js         # Authentication logic
+├── images/
+│   └── logo.svg        # SVG shield logo (optional, inline used instead)
 └── .gitignore
 ```
 
 ## Key Features
-- **Theme Toggle**: Light/dark mode with localStorage persistence
-  - Toggle button in navbar header (🌙/☀️)
-  - `ThemeManager` module handles toggle/save
-- **Shopping Cart**: Slide-out sidebar with quantity controls
-  - `CartManager` object manages cart state
-  - Data persists in localStorage key: `progear_cart`
-- **User Authentication**: Demo auth system with Firebase-ready structure
-  - Demo users: demo@progear.com, admin@progear.com, athlete@progear.com (password: demo123, admin123, sport123)
-  - Google OAuth buttons (demo mode)
-  - User data in localStorage: `progear_demo_user`
-- **Product Filtering**: Category cards filter products on click
-- **Toast Notifications**: `showToast(message, type)` function
+
+### Logo
+- Custom SVG shield icon with "P" letter and lightning bolt
+- Gold gradient coloring matching luxury theme
+- Hover animation (scale effect)
+- Tagline "Sports" below main text
+
+### Theme Toggle
+- Light/dark mode with localStorage persistence
+- Toggle button in navbar header (🌙/☀️)
+- `ThemeManager` module handles toggle/save
+
+### Shopping Cart
+- Slide-out sidebar with quantity controls
+- `CartManager` object manages cart state
+- Data persists in localStorage key: `progear_cart`
+
+### User Authentication
+- Demo auth system with Firebase-ready structure
+- Demo users: demo@progear.com, admin@progear.com, athlete@progear.com (password: demo123, admin123, sport123)
+- Google OAuth buttons (demo mode)
+- User data in localStorage: `progear_demo_user`
+
+### Profile Modal
+- Modern redesigned popup with cover background
+- Animated avatar with online status indicator
+- Premium member badges with star icon
+- Stats row (Orders, Wishlist, Total Spent) with icons
+- Quick action buttons with SVG icons
+- Settings menu with arrow indicators
+- Full dark theme support
+- Smooth scale + slide entrance animations
+
+### Product Filtering
+- Category cards filter products on click
+- Active state highlighting with gold border
+
+### Toast Notifications
+- `showToast(message, type)` function
+- Success/error/info types supported
 
 ## Key Functions/Objects
 
@@ -47,7 +79,7 @@ Premium sports equipment e-commerce website.
 - `CartManager` - Cart operations (add, remove, updateQuantity, getTotal, getTotalItems, getItems)
 - `UIController` - UI rendering (renderProducts, renderCart, showToast, cacheElements)
 - `AuthModule` - Auth state (isLoggedIn, getUser, logout, init)
-- `App` - Main controller (init, setupNavigation, setupCart, setupCategoryCards, etc.)
+- `App` - Main controller (init, setupNavigation, setupCart, setupCategoryCards, setupUserMenu, openProfileModal, closeProfileModal, etc.)
 - `showToast(message, type)` - Global toast notification
 
 ### auth.js
@@ -65,7 +97,7 @@ Premium sports equipment e-commerce website.
 
 ## Cart Storage Format
 ```json
-[{"id": 1, "name": "Pro Championship Basketball", "price": 89.99, "icon": "🏀", "category": "Basketball", "quantity": 2}]
+[{"id": 1, "name": "Wilson NBA Official Game Ball", "price": 189.99, "image": "https://...", "category": "Basketball", "quantity": 2}]
 ```
 
 ## User Storage Format
@@ -83,14 +115,15 @@ Premium sports equipment e-commerce website.
 ### Add new product
 Edit `ProductDB.products` array in `js/app.js`:
 ```js
-{id: 9, name: 'New Product', price: 99.99, icon: '🏆', category: 'Basketball'}
+{id: 17, name: 'New Product', price: 99.99, image: 'https://...', category: 'Basketball'}
 ```
 
 ### Add new theme color
 Edit CSS `:root` variables in `css/styles.css`:
 ```css
 :root {
-    --primary: #ff4d00;
+    --primary: #c9a962;
+    --gold: #d4af37;
     /* add new colors here */
 }
 ```
@@ -99,11 +132,19 @@ Edit CSS `:root` variables in `css/styles.css`:
 Edit `CartManager` methods in `js/app.js`
 
 ## Deployment
-Static site - can be deployed to:
-- GitHub Pages
-- Netlify
-- Vercel
-- Any static hosting
+
+### GitHub
+```bash
+git add .
+git commit -m "Your message"
+git push origin main
+```
+
+### Firebase Hosting
+1. Run `firebase login` to authenticate
+2. Run `firebase deploy` to deploy
+
+Or use CI/CD with GitHub Actions (configured in `.github/workflows/`)
 
 ## Dependencies (CDN)
 - Firebase Auth SDK (in auth.html)
